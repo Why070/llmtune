@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.cuda as cuda
+
 
 from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
 from llmtune.llms.llama.model import load_llama
@@ -86,11 +86,6 @@ def finetune(llm, tokenizer, tune_config):
     model = load_adapter(llm, lora_config=lora_config)
     model.print_trainable_parameters()
     
-    device_count = cuda.device_count()
-    for i in range(device_count):
-        print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
-    
-    device_count = cuda.device_count()
 
     data = load_data(tune_config, tokenizer)
 
@@ -133,8 +128,7 @@ def finetune(llm, tokenizer, tune_config):
     # else:
     #     trainer.train()
     
-    for i in range(device_count):
-        print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
+
 
     trainer.train()
 
