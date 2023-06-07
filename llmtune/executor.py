@@ -83,6 +83,10 @@ def finetune(llm, tokenizer, tune_config):
     )
     model = load_adapter(llm, lora_config=lora_config)
     model.print_trainable_parameters()
+    
+    device_count = cuda.device_count()
+    for i in range(device_count):
+        print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
 
     data = load_data(tune_config, tokenizer)
 
@@ -117,6 +121,9 @@ def finetune(llm, tokenizer, tune_config):
 
     # use half precision
     model = to_half_precision(model)
+    
+    for i in range(device_count):
+        print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
 
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
