@@ -127,10 +127,6 @@ def finetune(llm, tokenizer, tune_config):
     #     trainer.train(tune_config.resume_checkpoint)
     # else:
     #     trainer.train()
-    
-
-
-    trainer.train()
 
 
     # trainer.train(resume_from_checkpoint=True)
