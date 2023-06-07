@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.cuda as cuda
 
 from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
 from llmtune.llms.llama.model import load_llama
@@ -7,6 +8,7 @@ from llmtune.llms.opt.model import load_opt
 from llmtune.engine.data import TrainTxt, TrainSAD, TrainGPT4All
 from llmtune.engine.lora.peft import quant_peft
 from llmtune.utils import to_half_precision
+
 
 def load_llm(model, weights):
     llm_config = get_llm_config(model)
@@ -87,6 +89,8 @@ def finetune(llm, tokenizer, tune_config):
     device_count = cuda.device_count()
     for i in range(device_count):
         print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
+    
+    device_count = cuda.device_count()
 
     data = load_data(tune_config, tokenizer)
 
@@ -122,14 +126,18 @@ def finetune(llm, tokenizer, tune_config):
     # use half precision
     model = to_half_precision(model)
     
-    for i in range(device_count):
-        print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
-
+ 
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
     #     trainer.train(tune_config.resume_checkpoint)
     # else:
     #     trainer.train()
+    
+    for i in range(device_count):
+        print(f"GPU {i} Memory Usage: {cuda.memory_allocated(i) / 1024**3:.2f}GB / {cuda.max_memory_allocated(i) / 1024**3:.2f}GB")
+
+    trainer.train()
+
 
     # trainer.train(resume_from_checkpoint=True)
     trainer.train()
