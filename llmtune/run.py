@@ -152,15 +152,15 @@ def download(args):
 
 def finetune(args):
     from llmtune.executor import load_llm
-    print("\033Memory increase during load_llm\033:", get_memory_diff())
+    print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     llm, tokenizer = load_llm(args.model, args.weights)
-    print("\033Memory increase during load_llm\033:", get_memory_diff())
+    print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     from llmtune.config import get_finetune_config
     finetune_config = get_finetune_config(args)
     from llmtune.executor import finetune
-    print("\033Memory increase during finetune:\033", get_memory_diff())
+    print("\033[1;31mMemory increase during finetune:\033[0m", get_memory_diff())
     finetune(llm, tokenizer, finetune_config)
-    print("\033Memory increase during finetune:\033", get_memory_diff())
+    print("\033[1;31mMemory increase during finetune:\033[0m", get_memory_diff())
 
 if __name__ == '__main__':
     main()    
