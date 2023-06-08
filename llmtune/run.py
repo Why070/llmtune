@@ -2,7 +2,18 @@ import argparse
 from llmtune.config import LLM_MODELS
 
 # ----------------------------------------------------------------------------
+last_memory = 0
 
+def get_memory_total():
+    global last_memory
+    last_memory = torch.cuda.memory_allocated() / 1024 / 1024 
+    return last_memory
+
+def get_memory_diff():
+    global last_memory
+    last = last_memory
+    total = get_memory_total()
+    return total - last, total
 def make_parser():
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=lambda args: parser.print_help())
@@ -140,11 +151,15 @@ def download(args):
 
 def finetune(args):
     from llmtune.executor import load_llm
+    print("Memory increase during load_llm:", get_memory_diff())
     llm, tokenizer = load_llm(args.model, args.weights)
+    print("Memory increase during load_llm:", get_memory_diff())
     from llmtune.config import get_finetune_config
     finetune_config = get_finetune_config(args)
     from llmtune.executor import finetune
+    print("Memory increase during finetune:", get_memory_diff())
     finetune(llm, tokenizer, finetune_config)
+    print("Memory increase during finetune:", get_memory_diff())
 
 if __name__ == '__main__':
     main()    
