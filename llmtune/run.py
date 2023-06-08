@@ -1,4 +1,5 @@
 import argparse
+import torch
 from llmtune.config import LLM_MODELS
 
 # ----------------------------------------------------------------------------
