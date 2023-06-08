@@ -100,14 +100,14 @@ def finetune(llm, tokenizer, tune_config):
         bias="none",
         task_type="CAUSAL_LM",
     )
-    print("Memory increase during load_adapter:", get_memory_diff())
+    print("\033Memory increase during load_adapter:\033", get_memory_diff())
     model = load_adapter(llm, lora_config=lora_config)
-    print("Memory increase during load_adapter:", get_memory_diff())
+    print("\033Memory increase during load_adapter:\033", get_memory_diff())
     model.print_trainable_parameters()
 
-    print("Memory increase during load_data:", get_memory_diff())
+    print("\033Memory increase during load_data:\033", get_memory_diff())
     data = load_data(tune_config, tokenizer)
-    print("Memory increase during load_data:", get_memory_diff())
+    print("\033Memory increase during load_data:\033", get_memory_diff())
     
     training_arguments = transformers.TrainingArguments(
         per_device_train_batch_size=tune_config.mbatch_size,
@@ -139,8 +139,9 @@ def finetune(llm, tokenizer, tune_config):
     model.config.use_cache = False
 
     # use half precision
+    print("\033Memory increase during half precision:\033", get_memory_diff())
     model = to_half_precision(model)
-
+    print("\033Memory increase during half precision:\033", get_memory_diff())
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
     #     trainer.train(tune_config.resume_checkpoint)
