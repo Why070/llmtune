@@ -35,7 +35,7 @@ def load_llm(model, weights):
     return llm, tokenizer
 
 def load_adapter(llm, adapter_path=None, lora_config=None):
-    print("Memory increase during load_adapter:", get_memory_diff())
+    
     if adapter_path is None and lora_config is not None:
         model = quant_peft.get_peft_model(llm, lora_config)
     elif adapter_path is not None and lora_config is None:
@@ -45,11 +45,11 @@ def load_adapter(llm, adapter_path=None, lora_config=None):
         print(adapter_path, 'loaded')
     else:
         ValueError('Need to specify adapter_path or lora_config')
-    print("Memory increase during load_adapter:", get_memory_diff())
+    
     return model  
 
 def load_data(config, tokenizer):
-    print("Memory increase during load_data:", get_memory_diff())
+    
     if config.ds_type == "alpaca":
         data = TrainSAD(
             config.dataset, config.val_set_size, tokenizer, config.cutoff_len
@@ -65,7 +65,7 @@ def load_data(config, tokenizer):
     #     thd=config.txt_row_thd, use_eos_token=config.use_eos_token
     # )
     data.prepare_data()
-    print("Memory increase during load_data:", get_memory_diff())
+    
     return data
 
 def generate(
@@ -100,11 +100,15 @@ def finetune(llm, tokenizer, tune_config):
         bias="none",
         task_type="CAUSAL_LM",
     )
+    print("Memory increase during load_adapter:", get_memory_diff())
     model = load_adapter(llm, lora_config=lora_config)
+    print("Memory increase during load_adapter:", get_memory_diff())
     model.print_trainable_parameters()
 
+    print("Memory increase during load_data:", get_memory_diff())
     data = load_data(tune_config, tokenizer)
-
+    print("Memory increase during load_data:", get_memory_diff())
+    
     training_arguments = transformers.TrainingArguments(
         per_device_train_batch_size=tune_config.mbatch_size,
         gradient_accumulation_steps=tune_config.gradient_accumulation_steps,
