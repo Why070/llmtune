@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-
 from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
 from llmtune.llms.llama.model import load_llama
 from llmtune.llms.opt.model import load_opt
@@ -9,8 +8,21 @@ from llmtune.engine.data import TrainTxt, TrainSAD, TrainGPT4All
 from llmtune.engine.lora.peft import quant_peft
 from llmtune.utils import to_half_precision
 
+last_memory = 0
+
+def get_memory_total():
+    global last_memory
+    last_memory = torch.cuda.memory_allocated() / 1024 / 1024 
+    return last_memory
+
+def get_memory_diff():
+    global last_memory
+    last = last_memory
+    total = get_memory_total()
+    return total - last, total
 
 def load_llm(model, weights):
+    print("Memory increase during load_llm:", get_memory_diff())
     llm_config = get_llm_config(model)
     if model in LLAMA_MODELS:
         llm, tokenizer = load_llama(llm_config, weights)
@@ -19,9 +31,11 @@ def load_llm(model, weights):
     else:
         raise ValueError(f"Invalid model name: {model}")
     llm.eval()
+    print("Memory increase during load_llm:", get_memory_diff())
     return llm, tokenizer
 
 def load_adapter(llm, adapter_path=None, lora_config=None):
+    print("Memory increase during load_adapter:", get_memory_diff())
     if adapter_path is None and lora_config is not None:
         model = quant_peft.get_peft_model(llm, lora_config)
     elif adapter_path is not None and lora_config is None:
@@ -31,9 +45,11 @@ def load_adapter(llm, adapter_path=None, lora_config=None):
         print(adapter_path, 'loaded')
     else:
         ValueError('Need to specify adapter_path or lora_config')
+    print("Memory increase during load_adapter:", get_memory_diff())
     return model  
 
 def load_data(config, tokenizer):
+    print("Memory increase during load_data:", get_memory_diff())
     if config.ds_type == "alpaca":
         data = TrainSAD(
             config.dataset, config.val_set_size, tokenizer, config.cutoff_len
@@ -49,6 +65,7 @@ def load_data(config, tokenizer):
     #     thd=config.txt_row_thd, use_eos_token=config.use_eos_token
     # )
     data.prepare_data()
+    print("Memory increase during load_data:", get_memory_diff())
     return data
 
 def generate(
@@ -85,7 +102,6 @@ def finetune(llm, tokenizer, tune_config):
     )
     model = load_adapter(llm, lora_config=lora_config)
     model.print_trainable_parameters()
-    
 
     data = load_data(tune_config, tokenizer)
 
@@ -120,17 +136,25 @@ def finetune(llm, tokenizer, tune_config):
 
     # use half precision
     model = to_half_precision(model)
-    
- 
+
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
     #     trainer.train(tune_config.resume_checkpoint)
     # else:
     #     trainer.train()
 
-
     # trainer.train(resume_from_checkpoint=True)
-    trainer.train()
+    
+    print("Memory increase during training:", get_memory_diff())
 
+# ...
+
+# after training
+    
+
+    trainer.train()
+    
+    print("Memory increase during training:", get_memory_diff())
+    
     # Save Model
     model.save_pretrained(tune_config.adapter)
