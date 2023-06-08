@@ -22,7 +22,7 @@ def get_memory_diff():
     return total - last, total
 
 def load_llm(model, weights):
-    print("Memory increase during load_llm:", get_memory_diff())
+
     llm_config = get_llm_config(model)
     if model in LLAMA_MODELS:
         llm, tokenizer = load_llama(llm_config, weights)
@@ -31,7 +31,7 @@ def load_llm(model, weights):
     else:
         raise ValueError(f"Invalid model name: {model}")
     llm.eval()
-    print("Memory increase during load_llm:", get_memory_diff())
+ 
     return llm, tokenizer
 
 def load_adapter(llm, adapter_path=None, lora_config=None):
