@@ -156,7 +156,9 @@ def finetune(args):
     llm, tokenizer = load_llm(args.model, args.weights)
     print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     from llmtune.config import get_finetune_config
+    print("\033[1;31mMemory increase during get_config\033[0m:", get_memory_diff())
     finetune_config = get_finetune_config(args)
+    print("\033[1;31mMemory increase during get_config\033[0m:", get_memory_diff())
     from llmtune.executor import finetune
     print("\033[1;31mMemory increase during finetune:\033[0m", get_memory_diff())
     finetune(llm, tokenizer, finetune_config)
