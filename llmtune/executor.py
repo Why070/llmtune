@@ -138,6 +138,8 @@ def finetune(llm, tokenizer, tune_config):
         data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
     model.config.use_cache = False
+    
+    print_para(model)
 
     for param in model.parameters():
         print(param.shape, param.dtype)
@@ -149,7 +151,8 @@ def finetune(llm, tokenizer, tune_config):
 
     for param in model.parameters():
         print(param.shape, param.dtype)
-
+    
+    print_para(model)
    
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
