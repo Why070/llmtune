@@ -7,6 +7,7 @@ from llmtune.llms.opt.model import load_opt
 from llmtune.engine.data import TrainTxt, TrainSAD, TrainGPT4All
 from llmtune.engine.lora.peft import quant_peft
 from llmtune.utils import to_half_precision
+from llmtune.utils import print_para
 
 last_memory = 0
 
@@ -149,9 +150,7 @@ def finetune(llm, tokenizer, tune_config):
     for param in model.parameters():
         print(param.shape, param.dtype)
 
-    for param in model.parameters():
-        if param.dtype == torch.float16:
-            print(param)
+   
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
     #     trainer.train(tune_config.resume_checkpoint)
