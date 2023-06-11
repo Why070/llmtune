@@ -19,11 +19,11 @@ def to_half_precision(model):
     return model
 
 def print_para(model):
-    for name, module in model.named_modules():
-        if '4bit' in str(type(module)) or 'QuantLinear' in str(type(module)):
-            print(f"Parameters in module '{name}':")
-            for param in module.parameters():
-                print(param.shape, param.dtype)
+    for n, m in model.named_modules():
+        if '4bit' in str(type(m)) or 'QuantLinear' in str(type(m)):
+            print(f"Parameters in module '{n}':")
+            print(f"Zeros: {m.zeros} (dtype: {m.zeros.dtype})")
+            print(f"Scales: {m.scales} (dtype: {m.scales.dtype})")
 
 def download_file(url, path):
 	print('Starting download')
