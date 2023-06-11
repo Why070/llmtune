@@ -141,17 +141,11 @@ def finetune(llm, tokenizer, tune_config):
     
     print_para(model)
 
-    for param in model.parameters():
-        print(param.shape, param.dtype)
-
     # use half precision
     print("\033[1;31mMemory increase during half precision:\033[0m", get_memory_diff())
     model = to_half_precision(model)
     print("\033[1;31mMemory increase during half precision:\033[0m", get_memory_diff())
 
-    for param in model.parameters():
-        print(param.shape, param.dtype)
-    
     print_para(model)
    
     # if tune_config.resume_checkpoint:
