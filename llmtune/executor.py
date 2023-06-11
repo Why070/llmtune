@@ -138,10 +138,20 @@ def finetune(llm, tokenizer, tune_config):
     )
     model.config.use_cache = False
 
+    for param in model.parameters():
+        print(param.shape, param.dtype)
+
     # use half precision
     print("\033[1;31mMemory increase during half precision:\033[0m", get_memory_diff())
     model = to_half_precision(model)
     print("\033[1;31mMemory increase during half precision:\033[0m", get_memory_diff())
+
+    for param in model.parameters():
+        print(param.shape, param.dtype)
+
+    for param in model.parameters():
+        if param.dtype == torch.float16:
+            print(param)
     # if tune_config.resume_checkpoint:
     #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
     #     trainer.train(tune_config.resume_checkpoint)
