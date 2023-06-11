@@ -22,8 +22,8 @@ def print_para(model):
     for n, m in model.named_modules():
         if '4bit' in str(type(m)) or 'QuantLinear' in str(type(m)):
             print(f"Parameters in module '{n}':")
-            print(f"Zeros: {m.zeros} (dtype: {m.zeros.dtype})")
-            print(f"Scales: {m.scales} (dtype: {m.scales.dtype})")
+            print(f"Zeros: {m.zeros} (dtype: {m.zeros.dtype}), number of parameters: {m.zeros.numel()}")
+            print(f"Scales: {m.scales} (dtype: {m.scales.dtype}), number of parameters: {m.scales.numel()}")
 
 def download_file(url, path):
 	print('Starting download')
