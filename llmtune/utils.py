@@ -18,6 +18,13 @@ def to_half_precision(model):
             m.scales = m.scales.half()    
     return model
 
+def print_para(model):
+    for name, module in model.named_modules():
+        if '4bit' in str(type(module)) or 'QuantLinear' in str(type(module)):
+            print(f"Parameters in module '{name}':")
+            for param in module.parameters():
+                print(param.shape, param.dtype)
+
 def download_file(url, path):
 	print('Starting download')
 	urllib.request.urlretrieve(url, path)
