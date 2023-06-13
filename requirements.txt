@@ -1,6 +1,6 @@
 --extra-index-url https://download.pytorch.org/whl/cu116
 torch==1.13.1+cu116
 sentencepiece==0.1.97
-git+https://github.com/Why070/transformers
+git+https://github.com/Why070/transformers#egg=transformers
 git+https://github.com/huggingface/peft@ff9a1edbfd2d405b86d50a2e5299cc1bbd49d887#egg=peft
 datasets==2.10.1
