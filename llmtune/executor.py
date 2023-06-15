@@ -106,9 +106,9 @@ def finetune(llm, tokenizer, tune_config):
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
     model.print_trainable_parameters()
 
-    print("\033[1;31mMemory increase during load_data:\033[0m", get_memory_diff())
+
     data = load_data(tune_config, tokenizer)
-    print("\033[1;31mMemory increase during load_data:\033[0m", get_memory_diff())
+ 
     
     training_arguments = transformers.TrainingArguments(
         per_device_train_batch_size=tune_config.mbatch_size,
@@ -158,7 +158,7 @@ def finetune(llm, tokenizer, tune_config):
 
     # trainer.train(resume_from_checkpoint=True)
     
-    print("\033[1;31mMemory increase during training:\033[0m", get_memory_diff())
+    
 
 # ...
 
@@ -167,7 +167,7 @@ def finetune(llm, tokenizer, tune_config):
 
     trainer.train()
     
-    print("Memory increase during training:", get_memory_diff())
+  
     
     # Save Model
     model.save_pretrained(tune_config.adapter)
