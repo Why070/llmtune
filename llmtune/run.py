@@ -4,18 +4,7 @@ import subprocess
 from llmtune.config import LLM_MODELS
 
 # ----------------------------------------------------------------------------
-last_memory = 0
 
-def get_memory_total():
-    global last_memory
-    last_memory = torch.cuda.memory_allocated() / 1024 / 1024 
-    return last_memory
-
-def get_memory_diff():
-    global last_memory
-    last = last_memory
-    nnow = get_memory_total()
-    return now - last, now
 def make_parser():
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=lambda args: parser.print_help())
@@ -163,15 +152,15 @@ total_memory = 0
 
 def finetune(args):
     from llmtune.executor import load_llm
-    print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
+  
     llm, tokenizer = load_llm(args.model, args.weights)
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
     
     print(get_gpu_memory_usage())
     for name, param in llm.named_parameters():
         memory = param.numel() * param.element_size()
-        total_memory += memory
-    print(f"Total memory usage: {total_memory} bytes")
+        memory_total += memory
+    print(f"Total memory usage: {memory_total} bytes")
    
     print("After loading the model:")
     print("Model parameters:")
@@ -184,9 +173,9 @@ def finetune(args):
     finetune_config = get_finetune_config(args)
     
     from llmtune.executor import finetune
-    print("\033[1;31mMemory increase during finetune:\033[0m", get_memory_diff())
+   
     finetune(llm, tokenizer, finetune_config)
-    print("\033[1;31mMemory increase during finetune:\033[0m", get_memory_diff())
+   
 
 if __name__ == '__main__':
     main()    
