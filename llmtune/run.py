@@ -1,5 +1,6 @@
 import argparse
 import torch
+import subprocess
 from llmtune.config import LLM_MODELS
 
 # ----------------------------------------------------------------------------
