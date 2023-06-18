@@ -165,13 +165,15 @@ def finetune(args):
    
     print("After loading the model:")
     print("Model parameters:")
-    for name, param in llm.named_parameters():
-        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype},  Size: {param.size()}")
+    
     
 
     from llmtune.config import get_finetune_config
     
     finetune_config = get_finetune_config(args)
+
+    for name, param in llm.named_parameters():
+        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
     
     from llmtune.executor import finetune
    
