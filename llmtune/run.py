@@ -154,6 +154,10 @@ def finetune(args):
     from llmtune.executor import load_llm
   
     llm, tokenizer = load_llm(args.model, args.weights)
+
+    for name, param in model.named_parameters():
+        print(f"Name: {name}, size: {param.size()}")
+    
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
     
     print(get_gpu_memory_usage())
