@@ -164,8 +164,7 @@ def finetune(llm, tokenizer, tune_config):
     )
     model.config.use_cache = False
     
-    for name, param in llm.named_parameters():
-        print(f"Name: {name}, size: {param.size()}")
+    
 
     
     # use half precision
