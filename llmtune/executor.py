@@ -107,9 +107,13 @@ def finetune(llm, tokenizer, tune_config):
         bias="none",
         task_type="CAUSAL_LM",
     )
+    print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
+    print(get_gpu_memory_usage())
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
     model = load_adapter(llm, lora_config=lora_config)
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
+    print("\033[1;31mMemory occupied after load_adapter:\033[0m:")
+    print(get_gpu_memory_usage())
     
     for name, param in model.named_parameters():
         if 'adapter' in name:  # 检查参数名称是否包含 'adapter'
