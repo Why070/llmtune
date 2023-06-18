@@ -179,7 +179,9 @@ def finetune(llm, tokenizer, tune_config):
 
 # after training
     
-
+    print("\033[1;31mMemory occupied before train:\033[0m:")
+    print(get_gpu_memory_usage())
+    
     trainer.train()
     
   
