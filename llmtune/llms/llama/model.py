@@ -30,11 +30,14 @@ def load_llama(llm_config, checkpoint):
         model=model, checkpoint=checkpoint, device_map='auto'
     )
     model.seqlen = 2048
-    print(f"大显存占用： ")
+    print("\033[1;31mMemory occupied before 加载 tokenizer:\033[0m:")
     print(get_gpu_memory_usage())
     
     tokenizer = LlamaTokenizer.from_pretrained(llm_config.hf_tokenizer_config)
     tokenizer.truncation_side = 'left'
+
+    print("\033[1;31mMemory occupied after 加载 tokenizer:\033[0m:")
+    print(get_gpu_memory_usage())
    
    
    
