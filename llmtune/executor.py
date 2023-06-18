@@ -110,6 +110,11 @@ def finetune(llm, tokenizer, tune_config):
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
     model = load_adapter(llm, lora_config=lora_config)
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
+    
+    for name, param in model.named_parameters():
+        if 'adapter' in name:  # 检查参数名称是否包含 'adapter'
+            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+   
     model.print_trainable_parameters()
 
 
