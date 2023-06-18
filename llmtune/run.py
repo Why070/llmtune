@@ -14,8 +14,8 @@ def get_memory_total():
 def get_memory_diff():
     global last_memory
     last = last_memory
-    total = get_memory_total()
-    return total - last, total
+    nnow = get_memory_total()
+    return now - last, now
 def make_parser():
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=lambda args: parser.print_help())
