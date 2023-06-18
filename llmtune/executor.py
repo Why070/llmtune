@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import subprocess
 
 from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
 from llmtune.llms.llama.model import load_llama
