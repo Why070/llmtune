@@ -123,7 +123,7 @@ def finetune(llm, tokenizer, tune_config):
     for name, param in model.named_parameters():
         if name not in printed_params:
         # 打印新增参数的信息
-            print(f"Name: {name}, size: {param.size()}")
+            print(f"Name: {name}, size: {param.size()},Type: {param.dtype}")
         
         
         
