@@ -162,16 +162,14 @@ def finetune(args):
     from llmtune.executor import load_llm
     print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     llm, tokenizer = load_llm(args.model, args.weights)
-    print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
     print(get_gpu_memory_usage())
     print("After loading the model:")
     print("Model parameters:")
     for name, param in llm.named_parameters():
         print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
-    print("Tokenizer parameters:")
-    for name, param in tokenizer.named_parameters():
-        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+    
+
     from llmtune.config import get_finetune_config
     
     finetune_config = get_finetune_config(args)
