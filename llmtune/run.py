@@ -158,15 +158,13 @@ def finetune(args):
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
     
     print(get_gpu_memory_usage())
-    total_memory = 0
-    for name, param in llm.named_parameters():
-        memory = param.numel() * param.element_size()
-        total_memory += memory
-    print(f"Total memory usage: {total_memory} bytes")
+     
    
     print("After loading the model:")
     print("Model parameters:")
-    
+
+    for name, param in model.named_parameters():
+        print(f"Name: {name}, size: {param.size()},Type: {param.dtype}")
     
 
     from llmtune.config import get_finetune_config
