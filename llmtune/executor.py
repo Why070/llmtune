@@ -109,7 +109,7 @@ def finetune(llm, tokenizer, tune_config):
     )
 
     for name, param in llm.named_parameters():
-        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+        print(f"Name: {name}, size: {param.size()}")
     
     print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
     print(get_gpu_memory_usage())
@@ -121,7 +121,7 @@ def finetune(llm, tokenizer, tune_config):
     
     for name, param in model.named_parameters():
         if 'adapter' in name:  # 检查参数名称是否包含 'adapter'
-            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+            print(f"Name: {name}, size: {param.size()}")
    
     model.print_trainable_parameters()
 
