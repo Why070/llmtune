@@ -172,8 +172,7 @@ def finetune(args):
     
     finetune_config = get_finetune_config(args)
 
-    for name, param in llm.named_parameters():
-        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+ 
     
     from llmtune.executor import finetune
    
