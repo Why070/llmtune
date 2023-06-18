@@ -163,8 +163,11 @@ def finetune(args):
     print("After loading the model:")
     print("Model parameters:")
 
-    for name, param in model.named_parameters():
-        print(f"Name: {name}, size: {param.size()},Type: {param.dtype}")
+    for name, param in llm.named_parameters():
+        if not param.requires_grad:
+            print(f"Frozen Parameter - Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+        else:
+            print(f"Trainable Parameter - Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
     
 
     from llmtune.config import get_finetune_config
