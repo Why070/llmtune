@@ -166,7 +166,7 @@ def finetune(args):
     print("After loading the model:")
     print("Model parameters:")
     for name, param in llm.named_parameters():
-        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}, Memory: {memory} bytes, Size: {param.size()}")
+        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype},  Size: {param.size()}")
     
 
     from llmtune.config import get_finetune_config
