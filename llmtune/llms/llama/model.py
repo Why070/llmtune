@@ -4,6 +4,11 @@ import torch.nn as nn
 from llmtune.utils import find_layers
 from llmtune.engine.quant.converter import make_quant
 
+def get_gpu_memory_usage():
+    result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+    return result.stdout
+
+
 def load_llama(llm_config, checkpoint):
     import transformers, accelerate
     from transformers import LlamaConfig, LlamaForCausalLM, LlamaTokenizer
@@ -25,7 +30,9 @@ def load_llama(llm_config, checkpoint):
         model=model, checkpoint=checkpoint, device_map='auto'
     )
     model.seqlen = 2048
-
+    print(f"大显存占用： ")
+    print(get_gpu_memory_usage())
+    
     tokenizer = LlamaTokenizer.from_pretrained(llm_config.hf_tokenizer_config)
     tokenizer.truncation_side = 'left'
    
