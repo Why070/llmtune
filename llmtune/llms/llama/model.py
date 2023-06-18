@@ -29,7 +29,6 @@ def load_llama(llm_config, checkpoint):
     tokenizer = LlamaTokenizer.from_pretrained(llm_config.hf_tokenizer_config)
     tokenizer.truncation_side = 'left'
    
-    for name, param in model.named_parameters():
-        print(f"Name: {name}, size: {param.size()}")
+   
    
     return model, tokenizer
