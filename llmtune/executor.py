@@ -157,10 +157,13 @@ def finetune(llm, tokenizer, tune_config):
 
     
     # use half precision
-
+    print("\033[1;31mMemory occupied before half precision:\033[0m:")
+    print(get_gpu_memory_usage())
     print("\033[1;31mMemory increase during half precision:\033[0m", get_memory_diff())
     model = to_half_precision(model)
     print("\033[1;31mMemory increase during half precision:\033[0m", get_memory_diff())
+    print("\033[1;31mMemory occupied after half precision:\033[0m:")
+    print(get_gpu_memory_usage())
 
 
  
