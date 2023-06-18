@@ -23,6 +23,11 @@ def get_memory_diff():
     total = get_memory_total()
     return total - last, total
 
+def get_gpu_memory_usage():
+    result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+    return result.stdout
+               
+
 def load_llm(model, weights):
 
     llm_config = get_llm_config(model)
