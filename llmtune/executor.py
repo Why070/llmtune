@@ -119,9 +119,16 @@ def finetune(llm, tokenizer, tune_config):
     print("\033[1;31mMemory occupied after load_adapter:\033[0m:")
     print(get_gpu_memory_usage())
     
+    printed_params = set()
+
     for name, param in model.named_parameters():
-        if 'adapter' in name:  # 检查参数名称是否包含 'adapter'
-            print(f"Name: {name}, size: {param.size()}")
+        if name not in printed_params:
+        # 打印新增参数的信息
+        print(f"Name: {name}, size: {param.size()}")
+        
+        
+        
+        
    
     model.print_trainable_parameters()
 
