@@ -107,6 +107,10 @@ def finetune(llm, tokenizer, tune_config):
         bias="none",
         task_type="CAUSAL_LM",
     )
+
+    for name, param in llm.named_parameters():
+        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+    
     print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
