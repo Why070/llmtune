@@ -150,15 +150,31 @@ def download(args):
         raise Exception(f"Downloading {args.model} is not supported")
     download_file(llm_config.weights_url, args.weights)
 
+def get_gpu_memory_usage():
+    result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+    return result.stdout
+               
+    
+               
+
 def finetune(args):
     from llmtune.executor import load_llm
     print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     llm, tokenizer = load_llm(args.model, args.weights)
     print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
+    print("\033[1;31mMemory occupied during load_llm:\033[0m:")
+    print(get_gpu_memory_usage())
+    print("After loading the model:")
+    print("Model parameters:")
+    for name, param in llm.named_parameters():
+        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+    print("Tokenizer parameters:")
+    for name, param in tokenizer.named_parameters():
+        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
     from llmtune.config import get_finetune_config
-    print("\033[1;31mMemory increase during get_config\033[0m:", get_memory_diff())
+    
     finetune_config = get_finetune_config(args)
-    print("\033[1;31mMemory increase during get_config\033[0m:", get_memory_diff())
+    
     from llmtune.executor import finetune
     print("\033[1;31mMemory increase during finetune:\033[0m", get_memory_diff())
     finetune(llm, tokenizer, finetune_config)
