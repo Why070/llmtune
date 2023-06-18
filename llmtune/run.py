@@ -154,8 +154,11 @@ def download(args):
 def get_gpu_memory_usage():
     result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
     return result.stdout
-               
-    
+
+
+total_memory = 0
+
+
                
 
 def finetune(args):
@@ -163,7 +166,13 @@ def finetune(args):
     print("\033[1;31mMemory increase during load_llm\033[0m:", get_memory_diff())
     llm, tokenizer = load_llm(args.model, args.weights)
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
+    
     print(get_gpu_memory_usage())
+    for name, param in model.named_parameters():
+        memory = param.numel() * param.element_size()
+        total_memory += memory
+    print(f"Total memory usage: {total_memory} bytes")
+   
     print("After loading the model:")
     print("Model parameters:")
     for name, param in llm.named_parameters():
