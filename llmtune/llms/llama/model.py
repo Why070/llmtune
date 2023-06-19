@@ -23,10 +23,11 @@ def load_llama(llm_config, checkpoint):
         transformers.modeling_utils._init_weights = False
         torch.set_default_dtype(torch.half)
         model = LlamaForCausalLM(config)
-        for name, param in model.named_parameters():
-            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+        
 
         torch.set_default_dtype(torch.float)
+        for name, param in model.named_parameters():
+            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
         model = model.eval()
         
         layers = find_layers(model)
