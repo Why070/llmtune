@@ -17,18 +17,18 @@ def load_llama(llm_config, checkpoint):
     with accelerate.init_empty_weights():
         config = LlamaConfig.from_pretrained(llm_config.hf_config_name)
         
-        for name, param in llm.named_parameters():
+        for name, param in model.named_parameters():
             print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
         
         torch.set_default_dtype(torch.half)
         transformers.modeling_utils._init_weights = False
         torch.set_default_dtype(torch.half)
         model = LlamaForCausalLM(config)
-        for name, param in llm.named_parameters():
+        for name, param in model.named_parameters():
             print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
         torch.set_default_dtype(torch.float)
         model = model.eval()
-        for name, param in llm.named_parameters():
+        for name, param in model.named_parameters():
             print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
         layers = find_layers(model)
         for name in ['lm_head']:
