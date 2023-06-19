@@ -35,11 +35,12 @@ def load_llama(llm_config, checkpoint):
             if name in layers:
                 del layers[name]
         make_quant(model, layers, llm_config.bits)
+    for name, param in model.named_parameters():
+            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
     model = accelerate.load_checkpoint_and_dispatch(
         model=model, checkpoint=checkpoint, device_map='auto'
     )
-    for name, param in model.named_parameters():
-            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+    
     model.seqlen = 2048
     print("\033[1;31mMemory occupied before 加载 tokenizer:\033[0m:")
     print(get_gpu_memory_usage())
