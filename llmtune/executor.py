@@ -131,10 +131,14 @@ def finetune(llm, tokenizer, tune_config):
    
     model.print_trainable_parameters()
 
-
+    print("\033[1;31mMemory occupied before load_data:\033[0m:")
+        print(get_gpu_memory_usage())
     data = load_data(tune_config, tokenizer)
+    print("\033[1;31mMemory occupied after load_data:\033[0m:")
+        print(get_gpu_memory_usage())
  
-    
+    print("\033[1;31mMemory occupied before 初始化 training_arguments:\033[0m:")
+        print(get_gpu_memory_usage())
     training_arguments = transformers.TrainingArguments(
         per_device_train_batch_size=tune_config.mbatch_size,
         gradient_accumulation_steps=tune_config.gradient_accumulation_steps,
@@ -154,7 +158,11 @@ def finetune(llm, tokenizer, tune_config):
         # resume_from_checkpoint=tune_config.resume_checkpoint,
         resume_from_checkpoint=True,
     )
+    print("\033[1;31mMemory occupied after 初始化 training_arguments:\033[0m:")
+        print(get_gpu_memory_usage())
 
+    print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
+        print(get_gpu_memory_usage())
     trainer = transformers.Trainer(
         model=model,
         train_dataset=data.train_data,
@@ -162,7 +170,10 @@ def finetune(llm, tokenizer, tune_config):
         args=training_arguments,
         data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
+    print("\033[1;31mMemory occupied after 初始化 trainer:\033[0m:")
+        print(get_gpu_memory_usage())
     model.config.use_cache = False
+
     
     
 
