@@ -185,8 +185,7 @@ def finetune(llm, tokenizer, tune_config):
     model.config.use_cache = False
 
     
-    def get_memory():
-        return str(torch.cuda.memory_summary())  
+  
 
     
     # use half precision
