@@ -11,10 +11,17 @@ def get_gpu_memory_usage():
     result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
     return result.stdout
 
+def get_memory():
+    return str(torch.cuda.memory_summary()) 
 
 def load_llama(llm_config, checkpoint):
     import transformers, accelerate
     from transformers import LlamaConfig, LlamaForCausalLM, LlamaTokenizer
+    
+    print("\033[1;31mMemory occupied before 加载权重:\033[0m:")
+    print(get_memory())
+    print("\033[1;31mMemory occupied before 加载权重:\033[0m:")
+    print(get_gpu_memory_usage())
     
     with accelerate.init_empty_weights():
         config = LlamaConfig.from_pretrained(llm_config.hf_config_name)
@@ -29,8 +36,7 @@ def load_llama(llm_config, checkpoint):
 
         torch.set_default_dtype(torch.float)
         model = model.eval()
-        for name, param in model.named_parameters():
-            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+        
         
         
         
@@ -46,14 +52,21 @@ def load_llama(llm_config, checkpoint):
     )
     
     model.seqlen = 2048
-    print("\033[1;31mMemory occupied before 加载 tokenizer:\033[0m:")
+    for name, param in model.named_parameters():
+        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+    print("\033[1;31mMemory occupied after 加载权重:\033[0m:")
+    print(get_memory())
+    print("\033[1;31mMemory occupied after 加载权重:\033[0m:")
     print(get_gpu_memory_usage())
-    
+
+    print("\033[1;31mMemory occupied before tokenizer:\033[0m:")
+    print(get_memory())
     tokenizer = LlamaTokenizer.from_pretrained(llm_config.hf_tokenizer_config)
     tokenizer.truncation_side = 'left'
+    print("\033[1;31mMemory occupied after 加载tokenizer:\033[0m:")
+    print(get_memory())
 
-    print("\033[1;31mMemory occupied after 加载 tokenizer:\033[0m:")
-    print(get_gpu_memory_usage())
+    
    
    
    
