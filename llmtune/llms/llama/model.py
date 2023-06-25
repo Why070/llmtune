@@ -44,6 +44,8 @@ def load_llama(llm_config, checkpoint):
         for name in ['lm_head']:
             if name in layers:
                 del layers[name]
+        for name, param in model.named_parameters():
+            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
         make_quant(model, layers, llm_config.bits)
     
     
@@ -52,8 +54,7 @@ def load_llama(llm_config, checkpoint):
     )
     
     model.seqlen = 2048
-    for name, param in model.named_parameters():
-        print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+    
     print("\033[1;31mMemory occupied after 加载权重:\033[0m:")
     print(get_memory())
     print("\033[1;31mMemory occupied after 加载权重:\033[0m:")
