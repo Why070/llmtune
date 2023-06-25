@@ -26,6 +26,9 @@ def get_memory_diff():
 def get_gpu_memory_usage():
     result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
     return result.stdout
+
+def get_memory():
+    return str(torch.cuda.memory_summary()) 
                
 
 def load_llm(model, weights):
@@ -109,7 +112,8 @@ def finetune(llm, tokenizer, tune_config):
     )
 
     
-    
+    print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
+    print(get_memory())
     print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
@@ -117,6 +121,8 @@ def finetune(llm, tokenizer, tune_config):
     print("\033[1;31mMemory increase during load_adapter:\033[0m", get_memory_diff())
     print("\033[1;31mMemory occupied after load_adapter:\033[0m:")
     print(get_gpu_memory_usage())
+    print("\033[1;31mMemory occupied after load_adapter:\033[0m:")
+    print(get_memory())
     
     printed_params = set()
 
@@ -163,6 +169,8 @@ def finetune(llm, tokenizer, tune_config):
 
     print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
     print(get_gpu_memory_usage())
+    print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
+    print(get_memory())
     trainer = transformers.Trainer(
         model=model,
         train_dataset=data.train_data,
@@ -172,6 +180,8 @@ def finetune(llm, tokenizer, tune_config):
     )
     print("\033[1;31mMemory occupied after 初始化 trainer:\033[0m:")
     print(get_gpu_memory_usage())
+    print("\033[1;31mMemory occupied after 初始化 trainer:\033[0m:")
+    print(get_memory())
     model.config.use_cache = False
 
     
