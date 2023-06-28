@@ -8,7 +8,7 @@ from llmtune.engine.quant.converter import make_quant
 
 
 def get_gpu_memory_usage():
-    result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+    result = subprocess.run(['nvidia-smi', '-i', '0', '-q', '-d', 'MEMORY'], capture_output=True, text=True)
     return result.stdout
 
 def get_memory():
