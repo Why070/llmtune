@@ -141,7 +141,7 @@ def download(args):
     download_file(llm_config.weights_url, args.weights)
 
 def get_gpu_memory_usage():
-    result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+    result = subprocess.run(['nvidia-smi', '-i', '0', '-q', '-d', 'MEMORY'], capture_output=True, text=True)
     return result.stdout
 
 
