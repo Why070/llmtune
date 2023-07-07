@@ -143,8 +143,7 @@ def finetune(llm, tokenizer, tune_config):
     print("\033[1;31mMemory occupied after load_data:\033[0m:")
     print(get_gpu_memory_usage())
  
-    print("\033[1;31mMemory occupied before 初始化 training_arguments:\033[0m:")
-    print(get_gpu_memory_usage())
+   
     training_arguments = transformers.TrainingArguments(
         per_device_train_batch_size=tune_config.mbatch_size,
         gradient_accumulation_steps=tune_config.gradient_accumulation_steps,
@@ -164,8 +163,7 @@ def finetune(llm, tokenizer, tune_config):
         # resume_from_checkpoint=tune_config.resume_checkpoint,
         resume_from_checkpoint=True,
     )
-    print("\033[1;31mMemory occupied after 初始化 training_arguments:\033[0m:")
-    print(get_gpu_memory_usage())
+   
 
     print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
     print(get_gpu_memory_usage())
