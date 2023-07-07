@@ -26,30 +26,25 @@ def load_llama(llm_config, checkpoint):
     with accelerate.init_empty_weights():
         config = LlamaConfig.from_pretrained(llm_config.hf_config_name)
         
-        print("\033[1;31mMemory occupied before 2:\033[0m:")
-        print(get_gpu_memory_usage())
+       
         
         torch.set_default_dtype(torch.half)
         transformers.modeling_utils._init_weights = False
         torch.set_default_dtype(torch.half)
         model = LlamaForCausalLM(config)
         
-        print("\033[1;31mMemory occupied after 2:\033[0m:")
-        print(get_gpu_memory_usage())
+        
 
         torch.set_default_dtype(torch.float)
         model = model.eval()
 
-        print("\033[1;31mMemory occupied after 3:\033[0m:")
-        print(get_gpu_memory_usage())
         
         layers = find_layers(model)
         for name in ['lm_head']:
             if name in layers:
                 del layers[name]
         
-        print("\033[1;31mMemory occupied after 4:\033[0m:")
-        print(get_gpu_memory_usage())
+        
         
         for name, param in model.named_parameters():
             print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
@@ -60,8 +55,7 @@ def load_llama(llm_config, checkpoint):
         model=model, checkpoint=checkpoint, device_map='auto'
     )
     
-    print("\033[1;31mMemory occupied after 5:\033[0m:")
-    print(get_gpu_memory_usage())
+   
     
     model.seqlen = 2048
     
