@@ -12,3 +12,6 @@ def make_quant(module, names, bits, name=''):
             )
     for name1, child in module.named_children():
         make_quant(child, names, bits, name + '.' + name1 if name != '' else name1)
+    state_dict = model.state_dict() 
+    for name, param in state_dict.items():
+        print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}")
