@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import subprocess
+import pynvml
 
 from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
 from llmtune.llms.llama.model import load_llama
@@ -9,6 +10,7 @@ from llmtune.engine.data import TrainTxt, TrainSAD, TrainGPT4All
 from llmtune.engine.lora.peft import quant_peft
 from llmtune.utils import to_half_precision
 from llmtune.utils import print_para
+from pynvml import *
 
 last_memory = 0
 
@@ -26,6 +28,12 @@ def get_memory_diff():
 def get_gpu_memory_usage():
     result = subprocess.run(['nvidia-smi', '-i', '0', '-q', '-d', 'MEMORY'], capture_output=True, text=True)
     return result.stdout
+
+def print_gpu_utilization():
+    nvmlInit()
+    handle = nvmlDeviceGetHandleByIndex(0)
+    info = nvmlDeviceGetMemoryInfo(handle)
+    print(f"GPU memory occupied: {info.used//1024**2} MB.")
 
 def get_memory():
     return str(torch.cuda.memory_summary()) 
@@ -111,7 +119,8 @@ def finetune(llm, tokenizer, tune_config):
         task_type="CAUSAL_LM",
     )
 
-    
+    print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
+    print_gpu_utilization()
     print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
     print(get_memory())
     print("\033[1;31mMemory occupied before load_adapter:\033[0m:")
@@ -123,6 +132,8 @@ def finetune(llm, tokenizer, tune_config):
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory occupied after load_adapter:\033[0m:")
     print(get_memory())
+    print("\033[1;31mMemory occupied after load_adapter:\033[0m:")
+    print_gpu_utilization()
     
     printed_params = set()
 
@@ -163,8 +174,8 @@ def finetune(llm, tokenizer, tune_config):
         # resume_from_checkpoint=tune_config.resume_checkpoint,
         resume_from_checkpoint=True,
     )
-   
-
+    print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
+    print_gpu_utilization()
     print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory occupied before 初始化 trainer:\033[0m:")
@@ -180,6 +191,8 @@ def finetune(llm, tokenizer, tune_config):
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory occupied after 初始化 trainer:\033[0m:")
     print(get_memory())
+    print("\033[1;31mMemory occupied after 初始化 trainer:\033[0m:")
+    print_gpu_utilization()
     model.config.use_cache = False
 
     
@@ -187,6 +200,8 @@ def finetune(llm, tokenizer, tune_config):
 
     
     # use half precision
+    print("\033[1;31mMemory occupied before half precision:\033[0m:")
+    print_gpu_utilization()
     print("\033[1;31mMemory occupied before half precision:\033[0m:")
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory occupied before half precision:\033[0m:")
@@ -198,6 +213,8 @@ def finetune(llm, tokenizer, tune_config):
     print(get_gpu_memory_usage())
     print("\033[1;31mMemory occupied after half precision:\033[0m:")
     print(get_memory())
+    print("\033[1;31mMemory occupied before half precision:\033[0m:")
+    print_gpu_utilization()
 
 
  
