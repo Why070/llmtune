@@ -168,7 +168,7 @@ def finetune(args):
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
     print(get_gpu_memory_usage())
 
-    print("\033[1;31mMemory occupied before load_llm:\033[0m:")
+    print("\033[1;31mMemory occupied after load_llm:\033[0m:")
     print_gpu_utilization()
      
    
