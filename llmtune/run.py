@@ -1,7 +1,10 @@
 import argparse
 import torch
 import subprocess
+import pynvml
+
 from llmtune.config import LLM_MODELS
+from pynvml import *
 
 # ----------------------------------------------------------------------------
 
@@ -144,7 +147,11 @@ def get_gpu_memory_usage():
     result = subprocess.run(['nvidia-smi', '-i', '0', '-q', '-d', 'MEMORY'], capture_output=True, text=True)
     return result.stdout
 
-
+def print_gpu_utilization():
+    nvmlInit()
+    handle = nvmlDeviceGetHandleByIndex(0)
+    info = nvmlDeviceGetMemoryInfo(handle)
+    print(f"GPU memory occupied: {info.used//1024**2} MB.")
 
 
 
@@ -152,12 +159,17 @@ def get_gpu_memory_usage():
 
 def finetune(args):
     from llmtune.executor import load_llm
-  
+    
+    print("\033[1;31mMemory occupied before load_llm:\033[0m:")
+    print_gpu_utilization()
+    
     llm, tokenizer = load_llm(args.model, args.weights)
     
     print("\033[1;31mMemory occupied during load_llm:\033[0m:")
-    
     print(get_gpu_memory_usage())
+
+    print("\033[1;31mMemory occupied before load_llm:\033[0m:")
+    print_gpu_utilization()
      
    
     print("After loading the model:")
