@@ -46,8 +46,10 @@ def load_llama(llm_config, checkpoint):
         
         
         
-        for name, param in model.named_parameters():
-            print(f"Name: {name}, Shape: {param.shape}, Type: {param.dtype}")
+        state_dict = model.state_dict() 
+        for name, param in state_dict.items():
+            print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}")
+        
         make_quant(model, layers, llm_config.bits)
         
         state_dict = model.state_dict() 
