@@ -27,6 +27,13 @@ def load_llama(llm_config, checkpoint):
     print("\033[1;31mMemory occupied before 加载权重:\033[0m:")
     print(get_gpu_memory_usage())
 
+    temp=torch.tensor([1.0]).cuda()
+
+    print("\033[1;31mMemory occupied after 分配部分显存:\033[0m:")
+    print(get_memory())
+    print("\033[1;31mMemory occupied after 分配部分显存:\033[0m:")
+    print(get_gpu_memory_usage())
+
     
     with accelerate.init_empty_weights():
         config = LlamaConfig.from_pretrained(llm_config.hf_config_name)
