@@ -14,13 +14,7 @@ def get_gpu_memory_usage():
 def get_memory():
     return str(torch.cuda.memory_summary()) 
 
-def get_cuda_memory_usage():
-    command = "nvidia-smi --query-gpu=memory.used --format=csv,nounits,noheader"
-    result = subprocess.run(command.split(), capture_output=True, text=True)
-    output = result.stdout.strip()
-    memory_usage_bytes = int(output)  
-    memory_usage_mb = memory_usage_bytes / (1024 * 1024)  
-    return memory_usage_mb
+
 
 
 
@@ -32,9 +26,6 @@ def load_llama(llm_config, checkpoint):
     print(get_memory())
     print("\033[1;31mMemory occupied before 加载权重:\033[0m:")
     print(get_gpu_memory_usage())
-
-    cuda_memory_usage = get_cuda_memory_usage()
-    print(f"显存使用量：{cuda_memory_usage} MB")
 
     
     with accelerate.init_empty_weights():
