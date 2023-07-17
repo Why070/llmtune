@@ -137,10 +137,8 @@ def finetune(llm, tokenizer, tune_config):
     
     printed_params = set()
 
-    for name, param in model.named_parameters():
-        if name not in printed_params:
-        # 打印新增参数的信息
-            print(f"Name: {name}, size: {param.size()},Type: {param.dtype}")
+    for name, param in state_dict.items():
+        print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}, requires_grad: {param.requires_grad}")
         
         
         
