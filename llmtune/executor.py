@@ -232,8 +232,9 @@ def finetune(llm, tokenizer, tune_config):
 
 # after training
     
-    print("\033[1;31mMemory occupied before train:\033[0m:")
-    print(get_gpu_memory_usage())
+    state_dict = model.state_dict() 
+    for name, param in state_dict.items():
+        print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}, requires_grad: {param.requires_grad}")
     
     trainer.train()
     
