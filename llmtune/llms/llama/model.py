@@ -29,10 +29,7 @@ def load_llama(llm_config, checkpoint):
 
     temp=torch.tensor([1.0]).cuda()
 
-    print("\033[1;31mMemory occupied after 分配部分显存:\033[0m:")
-    print(get_memory())
-    print("\033[1;31mMemory occupied after 分配部分显存:\033[0m:")
-    print(get_gpu_memory_usage())
+
 
     
     with accelerate.init_empty_weights():
@@ -65,8 +62,7 @@ def load_llama(llm_config, checkpoint):
         make_quant(model, layers, llm_config.bits)
         
         state_dict = model.state_dict() 
-        for name, param in state_dict.items():
-            print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}")
+       
     
     
     model = accelerate.load_checkpoint_and_dispatch(
@@ -77,9 +73,7 @@ def load_llama(llm_config, checkpoint):
     
     model.seqlen = 2048
 
-    state_dict = model.state_dict() 
-    for name, param in state_dict.items():
-        print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}")
+    
     
     print("\033[1;31mMemory occupied after 加载权重:\033[0m:")
     print(get_memory())
