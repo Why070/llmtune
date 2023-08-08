@@ -93,13 +93,17 @@ class QuantLoraModel(torch.nn.Module):
                         }
                     )
                     if self.peft_config.enable_lora is None:
+                        print("Selected Linear8bitLt")
                         new_module = Linear8bitLt(target.in_features, target.out_features, bias=bias, **kwargs)
                     else:
                         kwargs.update({"enable_lora": self.peft_config.enable_lora})
                         new_module = MergedLinear8bitLt(target.in_features, target.out_features, bias=bias, **kwargs)
+                        print(" MergedLinear8bitLt")
                 elif isinstance(target, torch.nn.Linear) and self.peft_config.enable_lora is None:
+                    print(" Linear")
                     new_module = Linear(target.in_features, target.out_features, bias=bias, **kwargs)
                 elif isinstance(target, QuantLinear) and self.peft_config.enable_lora is None:
+                    print(" Linear4bitLt")
                     new_module = Linear4bitLt(target.in_features, target.out_features, bias=bias, **kwargs)
                 elif self.peft_config.enable_lora is not None:
                     kwargs.update({"enable_lora": self.peft_config.enable_lora})
