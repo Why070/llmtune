@@ -228,8 +228,18 @@ class Linear4bitLt(QuantLinear, LoraLayer):
             # initialize A the same way as the default for nn.Linear and B to zero
             nn.init.kaiming_uniform_(self.lora_A.weight, a=math.sqrt(5))
             nn.init.zeros_(self.lora_B.weight)
+    
+    def get_memory():
+        return str(torch.cuda.memory_summary())  
 
     def forward(self, x: torch.Tensor):
+        
+        def get_memory():
+            return str(torch.cuda.memory_summary()) 
+        
+        print("\033[1;31mMemory occupied before forward:\033[0m:")
+        print(get_memory())
+        
         result = super().forward(x)
 
         if self.disable_adapters:
@@ -249,6 +259,9 @@ class Linear4bitLt(QuantLinear, LoraLayer):
                 print(f"Module Name: {module_name}")
                 print("Output dtype:", output.dtype,"Output shape:", output.shape)
                 print("Result dtype:", result.dtype,"Result shape:", result.shape)
+        
+        print("\033[1;31mMemory occupied after forward:\033[0m:")
+        print(get_memory())       
         return result
 
 def mark_only_lora_as_trainable(model: nn.Module, bias: str = "none") -> None:
