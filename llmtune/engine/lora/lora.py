@@ -235,7 +235,7 @@ class Linear4bitLt(QuantLinear, LoraLayer):
     def forward(self, x: torch.Tensor):
         
         def get_memory():
-            return str(torch.cuda.memory_summary()) 
+            return torch.cuda.memory_allocated()/1024/1024
         
         print("\033[1;31mMemory occupied before forward:\033[0m:")
         print(get_memory())
