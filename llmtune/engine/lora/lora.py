@@ -245,6 +245,8 @@ class Linear4bitLt(QuantLinear, LoraLayer):
             else:
                 output = self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
                 result += output
+                print("Output dtype:", output.dtype,"Output shape:", output.shape)
+                print("Result dtype:", result.dtype,"Result shape:", result.shape)
         return result
 
 def mark_only_lora_as_trainable(model: nn.Module, bias: str = "none") -> None:
