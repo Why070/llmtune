@@ -245,6 +245,8 @@ class Linear4bitLt(QuantLinear, LoraLayer):
             else:
                 output = self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
                 result += output
+                module_name = self.__class__.__name__
+                print(f"Module Name: {module_name}")
                 print("Output dtype:", output.dtype,"Output shape:", output.shape)
                 print("Result dtype:", result.dtype,"Result shape:", result.shape)
         return result
