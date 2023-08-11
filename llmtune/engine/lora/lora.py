@@ -241,7 +241,10 @@ class Linear4bitLt(QuantLinear, LoraLayer):
         print(get_memory())
         
         result = super().forward(x)
-
+        
+        print("\033[1;31mMemory occupied after 前一个forward:\033[0m:")
+        print(get_memory()) 
+        
         if self.disable_adapters:
             return result
         elif self.r > 0:
