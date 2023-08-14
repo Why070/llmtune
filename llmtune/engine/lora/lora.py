@@ -242,7 +242,7 @@ class Linear4bitLt(QuantLinear, LoraLayer):
         
         result = super().forward(x)
         
-        print("\033[1;31mMemory occupied after super forward:\033[0m:")
+        print("\033[1;31mMemory occupied after forward:\033[0m:")
         print(get_memory()) 
         
         if self.disable_adapters:
@@ -257,15 +257,14 @@ class Linear4bitLt(QuantLinear, LoraLayer):
                 result += output
             else:
                 output = self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
-                print("\033[1;31mMemory occupied after get output:\033[0m:")
-                print(get_memory())  
+                 
                 result += output
                 module_name = self.__class__.__name__
                 print(f"Module Name: {module_name}")
                 print("Output dtype:", output.dtype,"Output shape:", output.shape)
                 print("Result dtype:", result.dtype,"Result shape:", result.shape)
         
-        print("\033[1;31mMemory occupied after get result:\033[0m:")
+        print("\033[1;31mMemory occupied after get output and result:\033[0m:")
         print(get_memory())       
         return result
 
