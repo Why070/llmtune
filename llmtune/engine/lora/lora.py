@@ -100,7 +100,7 @@ class QuantLoraModel(torch.nn.Module):
                 elif isinstance(target, torch.nn.Linear) and self.peft_config.enable_lora is None:
                     new_module = Linear(target.in_features, target.out_features, bias=bias, **kwargs)
                 elif isinstance(target, QuantLinear) and self.peft_config.enable_lora is None:
-                    print(f"Converting layer '{key}' to Linear4bitLt")
+                    
                     new_module = Linear4bitLt(target.in_features, target.out_features, bias=bias, **kwargs)
                 elif self.peft_config.enable_lora is not None:
                     kwargs.update({"enable_lora": self.peft_config.enable_lora})
@@ -242,7 +242,7 @@ class Linear4bitLt(QuantLinear, LoraLayer):
         
         result = super().forward(x)
         
-        print("\033[1;31mMemory occupied after 前一个forward:\033[0m:")
+        print("\033[1;31mMemory occupied after super forward:\033[0m:")
         print(get_memory()) 
         
         if self.disable_adapters:
@@ -257,13 +257,15 @@ class Linear4bitLt(QuantLinear, LoraLayer):
                 result += output
             else:
                 output = self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
+                print("\033[1;31mMemory occupied after get output:\033[0m:")
+                print(get_memory())  
                 result += output
                 module_name = self.__class__.__name__
                 print(f"Module Name: {module_name}")
                 print("Output dtype:", output.dtype,"Output shape:", output.shape)
                 print("Result dtype:", result.dtype,"Result shape:", result.shape)
         
-        print("\033[1;31mMemory occupied after forward:\033[0m:")
+        print("\033[1;31mMemory occupied after get result:\033[0m:")
         print(get_memory())       
         return result
 
