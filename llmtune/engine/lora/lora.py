@@ -244,7 +244,7 @@ class Linear4bitLt(QuantLinear, LoraLayer):
         
         print("\033[1;31mMemory occupied after forward:\033[0m:")
         print(get_memory()) 
-        
+        print("result shape:", result.shape, "result type:", result.dtype, "result requires_grad:", result.requires_grad)
         if self.disable_adapters:
             return result
         elif self.r > 0:
@@ -256,13 +256,19 @@ class Linear4bitLt(QuantLinear, LoraLayer):
                 output = self.lora_B(self.lora_A(self.lora_dropout(x))).to(expected_dtype) * self.scaling
                 result += output
             else:
-                output = self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
+                a=self.lora_dropout(x)
+                print("lora_dropout(x) dtype:", a.dtype,"lora_dropout(x) shape:", a.shape, "lora_dropout(x) requires_grad:", a.requires_grad)
+                b=self.lora_A(a)
+                print("lora_A(a) dtype:", b.dtype,"lora_A(a)  shape:", b.shape, "lora_A(a) requires_grad:", b.requires_grad)
+                c=self.lora_B(b)
+                print("lora_B(b) dtype:", c.dtype,"lora_B(b) shape:", c.shape, "lora_B(b) requires_grad:", c.requires_grad)
+                output = c * self.scaling
                  
                 result += output
                 module_name = self.__class__.__name__
                 print(f"Module Name: {module_name}")
-                print("Output dtype:", output.dtype,"Output shape:", output.shape)
-                print("Result dtype:", result.dtype,"Result shape:", result.shape)
+                print("Output dtype:", output.dtype,"Output shape:", output.shape, "output requires_grad:", output.requires_grad)
+                print("Result dtype:", result.dtype,"Result shape:", result.shape , "result requires_grad:", result.requires_grad)
         
         print("\033[1;31mMemory occupied after get output and result:\033[0m:")
         print(get_memory())       
