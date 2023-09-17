@@ -282,9 +282,10 @@ class Linear4bitLt(QuantLinear, LoraLayer):
                 """
         """
         print("\033[1;31mMemory occupied after get output and result:\033[0m:")
-        print(get_memory())       
-        return result
+        print(get_memory())    
         """
+        return result
+        
 
 def mark_only_lora_as_trainable(model: nn.Module, bias: str = "none") -> None:
     for n, p in model.named_parameters():
