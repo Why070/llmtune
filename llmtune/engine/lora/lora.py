@@ -238,15 +238,16 @@ class Linear4bitLt(QuantLinear, LoraLayer):
             allocated_memory = torch.cuda.memory_allocated() / 1024 / 1024
             reserved_memory = torch.cuda.memory_reserved() / 1024 / 1024
             return f"Allocated Memory: {allocated_memory:.2f} MB, Reserved Memory: {reserved_memory:.2f} MB"
-        
+        """
         print("\033[1;31mMemory occupied before forward:\033[0m:")
         print(get_memory())
-        
+        """
         result = super().forward(x)
-        
+        """
         print("\033[1;31mMemory occupied after forward:\033[0m:")
         print(get_memory()) 
         print("result shape:", result.shape, "result type:", result.dtype, "result requires_grad:", result.requires_grad)
+        """
         if self.disable_adapters:
             return result
         elif self.r > 0:
@@ -259,22 +260,31 @@ class Linear4bitLt(QuantLinear, LoraLayer):
                 result += output
             else:
                 a=self.lora_dropout(x)
+                """
                 print("lora_dropout(x) dtype:", a.dtype,"lora_dropout(x) shape:", a.shape, "lora_dropout(x) requires_grad:", a.requires_grad)
+                """
                 b=self.lora_A(a)
+                """
                 print("lora_A(a) dtype:", b.dtype,"lora_A(a)  shape:", b.shape, "lora_A(a) requires_grad:", b.requires_grad)
+                """
                 c=self.lora_B(b)
+                """
                 print("lora_B(b) dtype:", c.dtype,"lora_B(b) shape:", c.shape, "lora_B(b) requires_grad:", c.requires_grad)
+                """
                 output = c * self.scaling
                  
                 result += output
                 module_name = self.__class__.__name__
+                """
                 print(f"Module Name: {module_name}")
                 print("Output dtype:", output.dtype,"Output shape:", output.shape, "output requires_grad:", output.requires_grad)
                 print("Result dtype:", result.dtype,"Result shape:", result.shape , "result requires_grad:", result.requires_grad)
-        
+                """
+        """
         print("\033[1;31mMemory occupied after get output and result:\033[0m:")
         print(get_memory())       
         return result
+        """
 
 def mark_only_lora_as_trainable(model: nn.Module, bias: str = "none") -> None:
     for n, p in model.named_parameters():
