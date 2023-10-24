@@ -232,9 +232,9 @@ def finetune(llm, tokenizer, tune_config):
 
 # after training
     
-    state_dict = model.state_dict() 
+    
 
-    for name, param in state_dict.items():
+    for name, param in model.named_parameters():
         print(f"Parameter: {name}, Size: {param.size()}, Type: {param.dtype}, requires_grad: {param.requires_grad}")
     trainer.train()
     
